@@ -1,8 +1,8 @@
 import pygame
+import random
 
 pygame.init()
 
-# Window settings
 WIDTH = 600
 HEIGHT = 600
 BORDER_SIZE = 20
@@ -11,18 +11,24 @@ CELL_SIZE = 20
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Snake")
 
-# Clock for Frames per Second
 clock = pygame.time.Clock()
 
-# Snake head position
-x = 300
-y = 300
+# Snake starts with one segment
+snake = [(300, 300)]
 
-# Starting Direction (Snake goes Right)
+# Moving right initially
 dx = CELL_SIZE
 dy = 0
 
-# Main game loop
+# Food
+food_x = random.randrange(BORDER_SIZE,
+                          WIDTH - BORDER_SIZE,
+                          CELL_SIZE)
+
+food_y = random.randrange(BORDER_SIZE,
+                          HEIGHT - BORDER_SIZE,
+                          CELL_SIZE)
+#Main game loop
 running = True
 
 while running:
@@ -51,64 +57,93 @@ while running:
                 dx = 0
                 dy = CELL_SIZE
 
-    # Move Snake
-    x += dx
-    y += dy
+    # Create New Body Part
+    new_body = (
+        snake[0][0] + dx,
+        snake[0][1] + dy
+    )
 
-    # Collision Detection
-    if x < BORDER_SIZE:
+    # Add Body Part To Snake
+    snake.insert(0, new_body)
+
+    # Food Collision
+    if new_body == (food_x, food_y):
+
+        food_x = random.randrange(
+            BORDER_SIZE,
+            WIDTH - BORDER_SIZE,
+            CELL_SIZE
+        )
+
+        food_y = random.randrange(
+            BORDER_SIZE,
+            HEIGHT - BORDER_SIZE,
+            CELL_SIZE
+        )
+
+    else:
+        # Remove Tail
+        snake.pop()
+
+    # Wall Collision
+    if new_body[0] < BORDER_SIZE:
         running = False
 
-    if x > WIDTH - BORDER_SIZE - CELL_SIZE:
+    if new_body[0] > WIDTH - BORDER_SIZE - CELL_SIZE:
         running = False
 
-    if y < BORDER_SIZE:
+    if new_body[1] < BORDER_SIZE:
         running = False
 
-    if y > HEIGHT - BORDER_SIZE - CELL_SIZE:
+    if new_body[1] > HEIGHT - BORDER_SIZE - CELL_SIZE:
+        running = False
+
+    # Self Collision
+    if new_body in snake[1:]:
         running = False
 
     # Draw Frame
     screen.fill((0, 0, 0))
 
-    # Top Border
+    # Borders
+    pygame.draw.rect(screen, (255, 0, 0),
+                     (0, 0, WIDTH, BORDER_SIZE))
+
+    pygame.draw.rect(screen, (255, 0, 0),
+                     (0, HEIGHT - BORDER_SIZE,
+                      WIDTH, BORDER_SIZE))
+
+    pygame.draw.rect(screen, (255, 0, 0),
+                     (0, 0, BORDER_SIZE, HEIGHT))
+
+    pygame.draw.rect(screen, (255, 0, 0),
+                     (WIDTH - BORDER_SIZE,
+                      0,
+                      BORDER_SIZE,
+                      HEIGHT))
+
+    # Draw Food
     pygame.draw.rect(
         screen,
-        (255, 0, 0),
-        (0, 0, WIDTH, BORDER_SIZE)
+        (255, 255, 0),
+        (food_x, food_y,
+         CELL_SIZE, CELL_SIZE)
     )
 
-    # Bottom Border
-    pygame.draw.rect(
-        screen,
-        (255, 0, 0),
-        (0, HEIGHT - BORDER_SIZE, WIDTH, BORDER_SIZE)
-    )
+    # Snake
+    for segment in snake:
 
-    # Left Border
-    pygame.draw.rect(
-        screen,
-        (255, 0, 0),
-        (0, 0, BORDER_SIZE, HEIGHT)
-    )
-
-    # Right Border
-    pygame.draw.rect(
-        screen,
-        (255, 0, 0),
-        (WIDTH - BORDER_SIZE, 0, BORDER_SIZE, HEIGHT)
-    )
-
-    # Snake Head
-    pygame.draw.rect(
-        screen,
-        (0, 255, 0),
-        (x, y, CELL_SIZE, CELL_SIZE)
-    )
+        pygame.draw.rect(
+            screen,
+            (0, 255, 0),
+            (segment[0],
+             segment[1],
+             CELL_SIZE,
+             CELL_SIZE)
+        )
 
     pygame.display.flip()
 
-    # Snake Speed
     clock.tick(10)
 
 pygame.quit()

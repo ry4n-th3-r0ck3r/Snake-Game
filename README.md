@@ -5,6 +5,7 @@ A Snake game built with Python and Pygame as a personal learning project.
 ## Current Features
 
 * Pygame window creation
+* Start screen with instructions
 * Controllable snake head
 * Automatic directional movement
 * Screen border rendering
@@ -13,6 +14,7 @@ A Snake game built with Python and Pygame as a personal learning project.
 * Random food spawn
 * Snake body grows with each food consumed
 * Collision detection on snake body
+* Game over screen
 
 ## Technologies Used
 
@@ -25,7 +27,6 @@ Planned future features include:
 
 
 * Score tracking
-* Game over screen
 * Restart functionality
 * Enhanced Graphics
 
@@ -38,5 +39,9 @@ Initial project skeleton.
 ### v0.5 - Basic Game Function
 
 Prototype of base game.
+
+### v0.75 - Improvements on Game Functions
+
+Adjusted turning radius of snake and added start and game over screens
 
 

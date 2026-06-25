@@ -7,13 +7,16 @@ pygame.init()
 
 WIDTH = 600
 HEIGHT = 600
-BORDER_SIZE = 20
+BORDER_SIZE = 40
 CELL_SIZE = 20
 
 #Game state constant variables.
 START = 0
 PLAYING = 1
 GAME_OVER = 2
+
+#Variable for displayed score
+score = 0
 
 #Game fonts for game start and game over screens
 font = pygame.font.SysFont(None, 48)
@@ -99,6 +102,8 @@ while running:
 
         # Food Collision
         if new_body == (food_x, food_y):
+
+            score += 1
 
             food_x = random.randrange(
                 BORDER_SIZE,
@@ -195,6 +200,15 @@ while running:
              CELL_SIZE, CELL_SIZE)
         )
 
+        #Draw Score
+        score_text = small_font.render(
+            f"Score: {score}",
+            True,
+            (255, 255, 255)
+        )
+
+        screen.blit(score_text, (15, 10))
+
         # Snake
         for segment in snake:
 
@@ -212,6 +226,7 @@ while running:
         pygame.draw.rect(screen, (255, 0, 0), (0, HEIGHT - BORDER_SIZE, WIDTH, BORDER_SIZE))
         pygame.draw.rect(screen, (255, 0, 0), (0, 0, BORDER_SIZE, HEIGHT))
         pygame.draw.rect(screen, (255, 0, 0), (WIDTH - BORDER_SIZE, 0, BORDER_SIZE, HEIGHT))
+
 
         # Draw Snake
         for segment in snake:
@@ -231,10 +246,15 @@ while running:
         # Create Text
         game_over = font.render("GAME OVER", True, (255, 0, 0))
         quit_text = small_font.render("Press any key to quit", True, (255, 255, 255))
-
+        score_text = small_font.render(
+            f"Final Score: {score}",
+            True,
+            (255, 255, 255)
+        )
         # Draw Text
         screen.blit(game_over, (170, 200))
         screen.blit(quit_text, (180, 280))
+        screen.blit(score_text, (200, 260))
 
     pygame.display.flip()
 

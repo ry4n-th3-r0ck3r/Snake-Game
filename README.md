@@ -15,6 +15,7 @@ A Snake game built with Python and Pygame as a personal learning project.
 * Snake body grows with each food consumed
 * Collision detection on snake body
 * Game over screen
+* Scoreboard
 
 ## Technologies Used
 
@@ -25,8 +26,6 @@ A Snake game built with Python and Pygame as a personal learning project.
 
 Planned future features include:
 
-
-* Score tracking
 * Restart functionality
 * Enhanced Graphics
 
@@ -44,4 +43,6 @@ Prototype of base game.
 
 Adjusted turning radius of snake and added start and game over screens
 
+### v1.0 - Functional Game
 
+Game now keeps score during play and is a functioning game.

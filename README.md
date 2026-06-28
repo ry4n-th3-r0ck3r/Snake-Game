@@ -11,8 +11,9 @@ A Snake game built with Python and Pygame as a personal learning project.
 * Screen border rendering
 * Border collision detection
 * Frame rate control
-* Random food spawn
-* Snake body grows with each food consumed
+* Random food/poison
+* Snake body grows and score increases with each food consumed
+* Snake body shrinks and score lowers for each poison consumed
 * Collision detection on snake body
 * Game over screen
 * Scoreboard
@@ -28,6 +29,7 @@ Planned future features include:
 
 * Restart functionality
 * Enhanced Graphics
+* Smoother gameplay mechanics
 
 ## Version History
 
@@ -46,3 +48,7 @@ Adjusted turning radius of snake and added start and game over screens
 ### v1.0 - Functional Game
 
 Game now keeps score during play and is a functioning game.
+
+### v2.0 - New Gameplay Mechanics
+
+Game has a new poison feature that can impact score.

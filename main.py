@@ -3,8 +3,6 @@ import random
 
 pygame.init()
 
-
-
 WIDTH = 600
 HEIGHT = 600
 BORDER_SIZE = 40
@@ -17,6 +15,8 @@ GAME_OVER = 2
 
 #Variable for displayed score
 score = 0
+#Ensures score cannot be negative.
+score = max(0, score - 1)
 
 #Game fonts for game start and game over screens
 font = pygame.font.SysFont(None, 48)
@@ -45,6 +45,18 @@ food_x = random.randrange(BORDER_SIZE,
 food_y = random.randrange(BORDER_SIZE,
                           HEIGHT - BORDER_SIZE,
                           CELL_SIZE)
+
+# Poison
+poison = None
+poison_active = False
+poison_x = random.randrange(BORDER_SIZE,
+                          WIDTH - BORDER_SIZE,
+                          CELL_SIZE)
+
+poison_y = random.randrange(BORDER_SIZE,
+                          HEIGHT - BORDER_SIZE,
+                          CELL_SIZE)
+
 #Main game loop
 running = True
 
@@ -104,7 +116,7 @@ while running:
         if new_body == (food_x, food_y):
 
             score += 1
-
+            #Move the Food after eating
             food_x = random.randrange(
                 BORDER_SIZE,
                 WIDTH - BORDER_SIZE,
@@ -116,6 +128,15 @@ while running:
                 HEIGHT - BORDER_SIZE,
                 CELL_SIZE
             )
+
+            # Spawns/Respawns poison based on food consumption.
+            # About a 33 percent chance poison will appear.
+            poison_active = False
+
+            if random.randint(1, 3) == 1:
+                poison_x = random.randrange(BORDER_SIZE, WIDTH - BORDER_SIZE, CELL_SIZE)
+                poison_y = random.randrange(BORDER_SIZE, HEIGHT - BORDER_SIZE, CELL_SIZE)
+                poison_active = True
 
         else:
             # Remove Tail
@@ -138,6 +159,20 @@ while running:
         if new_body in snake[1:]:
             game_state = GAME_OVER
 
+        #Poison Collision
+
+        if new_body == (poison_x, poison_y):
+
+            if len(snake) == 1:
+                    game_state = GAME_OVER
+            else:
+                snake.pop()  # poison removes one extra segment
+                score -= 1
+                poison_active = False
+
+
+
+
     # +++++++++++++++
     #DRAWING SECTION
     # +++++++++++++++
@@ -152,7 +187,7 @@ while running:
         )
 
         food = small_font.render(
-            "Eat the Yellow Food",
+            "Eat the Red Food",
             True,
             (255, 255, 255)
         )
@@ -162,7 +197,11 @@ while running:
             True,
             (255, 255, 255)
         )
-
+        avoid2 = small_font.render(
+            "Avoid the Blue Poison",
+            True,
+            (255, 255, 255)
+        )
         start = small_font.render(
             "Press SPACE to Begin",
             True,
@@ -170,10 +209,13 @@ while running:
         )
 
         screen.blit(title, (220, 100))
-        screen.blit(instructions, (160, 200))
-        screen.blit(food, (190, 240))
-        screen.blit(avoid, (160, 280))
-        screen.blit(start, (175, 360))
+
+        screen.blit(instructions, (160, 190))
+        screen.blit(food, (160, 230))
+        screen.blit(avoid, (160, 270))
+        screen.blit(avoid2, (160, 310))
+
+        screen.blit(start, (220, 380))
 
     # Borders
     pygame.draw.rect(screen, (255, 0, 0),
@@ -195,10 +237,18 @@ while running:
         # Draw Food
         pygame.draw.rect(
             screen,
-            (255, 255, 0),
+            (255, 0, 0),
             (food_x, food_y,
              CELL_SIZE, CELL_SIZE)
         )
+
+        #Draw poison
+        if poison_active:
+            pygame.draw.rect(
+                screen,
+                (0, 255, 255),
+                (poison_x, poison_y, CELL_SIZE, CELL_SIZE)
+            )
 
         #Draw Score
         score_text = small_font.render(
@@ -239,7 +289,7 @@ while running:
         # Draw Food
         pygame.draw.rect(
             screen,
-            (255, 255, 0),
+            (255, 0, 0),
             (food_x, food_y, CELL_SIZE, CELL_SIZE)
         )
 
